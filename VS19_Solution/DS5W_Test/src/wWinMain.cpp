@@ -93,7 +93,8 @@ INT WINAPI wWinMain(HINSTANCE _In_ hInstance, HINSTANCE _In_opt_ hPrevInstance, 
 
 		// Color intentsity
 		float intensity = 1.0f;
-
+		outState.leftRumble = 0xFF;
+		outState.rightRumble = 0x00;
 		// Application infinity loop
 		while (!(inState.buttonsA & DS5W_ISTATE_BTN_A_LEFT_BUMPER && inState.buttonsA & DS5W_ISTATE_BTN_A_RIGHT_BUMPER)) {
 			// Get input state
@@ -134,16 +135,16 @@ INT WINAPI wWinMain(HINSTANCE _In_ hInstance, HINSTANCE _In_opt_ hPrevInstance, 
 				console.writeLine(builder);
 
 				// === Write Output ===
-				outState.leftRumble = max(outState.leftRumble - 2L, 0);
-				outState.rightRumble = max(outState.rightRumble - 1L, 0);
 
 				outState.lightbar = DS5W::color_R8G8B8_UCHAR_A32_UNORM(25, 45, 161, intensity);
 				intensity -= 0.0025f;
 				if (intensity <= 0.0f) {
 					intensity = 1.0f;
 
-					outState.leftRumble = 0xFF;
-					outState.rightRumble = 0xFF;
+					if (outState.leftRumble == 0x00) outState.leftRumble = 0xFF;
+					else outState.leftRumble = 0x00;
+					if (outState.rightRumble == 0xFF) outState.rightRumble = 0x00;
+					else outState.rightRumble = 0xFF;
 				}
 
 				DS5W::TriggerFX_Clicky efm;
